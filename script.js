@@ -1,5 +1,4 @@
-
-document.addEventListener("DOMContentLoaded", () => {
+ment.addEventListener("DOMContentLoaded", () => {
   const audio = document.getElementById("audio-player");
   const playButton = document.getElementById("play-btn");
   const previousButton = document.getElementById("previous-btn");
