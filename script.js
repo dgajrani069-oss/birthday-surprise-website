@@ -1,9 +1,9 @@
-ment.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", () => {
   const audio = document.getElementById("audio-player");
   const playButton = document.getElementById("play-btn");
   const previousButton = document.getElementById("previous-btn");
   const nextButton = document.getElementById("next-btn");
-
   const trackTitle = document.getElementById("track-title");
   const trackCaption = document.getElementById("track-caption");
   const musicStatus = document.getElementById("music-status");
@@ -11,45 +11,55 @@ ment.addEventListener("DOMContentLoaded", () => {
 
   const galleryPhotos = document.querySelectorAll(".photo-card img");
   const photoStatus = document.getElementById("photo-status");
-
   const surpriseButton = document.getElementById("surprise-btn");
   const surpriseMessage = document.getElementById("surprise-message");
-
   const lunchButton = document.getElementById("lunch-reveal-btn");
   const lunchReminder = document.getElementById("lunch-reminder");
 
-  // Music order: 3.mp3 -> 2.mp3 -> 1.mp3.
-  // Each song displays its matching JPEG photo.
+  // Files are stored in the main GitHub repository.
+  // Playlist order: 3.mp3, 2.mp3, 1.mp3.
   const playlist = [
     {
       title: "Our First Song 💗",
-      src: "./assets/music/3.mp3",
-      photo: "./assets/photos/3.jpeg",
+      src: "./3.mp3",
+      photo: "./3.jpeg",
       caption: "A little song for my favourite person."
     },
     {
       title: "Our Second Song 🌸",
-      src: "./assets/music/2.mp3",
-      photo: "./assets/photos/2.jpeg",
+      src: "./2.mp3",
+      photo: "./2.jpeg",
       caption: "Another song, another memory with you."
     },
     {
       title: "Our Third Song ♡",
-      src: "./assets/music/1.mp3",
-      photo: "./assets/photos/1.jpeg",
+      src: "./1.mp3",
+      photo: "./1.jpeg",
       caption: "No matter the song, my heart chooses you."
     }
   ];
 
   let currentTrack = 0;
 
-  // Show a useful message if a gallery photo is missing.
-  galleryPhotos.forEach((photo) => {
+  // Fix the gallery image paths.
+  const galleryPaths = [
+    "./3.jpeg",
+    "./2.jpeg",
+    "./1.jpeg"
+  ];
+
+  galleryPhotos.forEach((photo, index) => {
     photo.addEventListener("error", () => {
-      photoStatus.textContent =
-        "Photo not found: " + photo.getAttribute("src") +
-        ". Check the filename, extension and assets/photos folder.";
+      if (photoStatus) {
+        photoStatus.textContent =
+          "Photo could not load: " + photo.src +
+          ". Check the image file in GitHub.";
+      }
     });
+
+    if (galleryPaths[index]) {
+      photo.src = galleryPaths[index];
+    }
   });
 
   function updateSongPhoto(path, title) {
@@ -64,8 +74,8 @@ ment.addEventListener("DOMContentLoaded", () => {
       songPhoto.classList.remove("photo-changing");
       songPhoto.alt = "Photo could not be loaded";
       musicStatus.textContent =
-        "Photo not found: " + path +
-        ". Check the exact filename and extension.";
+        "Photo could not load: " + path +
+        ". Check the filename in GitHub.";
     };
 
     songPhoto.src = path;
@@ -85,7 +95,7 @@ ment.addEventListener("DOMContentLoaded", () => {
 
     playButton.textContent = "▶";
     playButton.setAttribute("aria-label", "Play music");
-    musicStatus.textContent = "Ready to play 💗";
+    musicStatus.textContent = "Tap play to start our playlist 💗";
   }
 
   async function playMusic() {
@@ -93,7 +103,7 @@ ment.addEventListener("DOMContentLoaded", () => {
       await audio.play();
     } catch (error) {
       musicStatus.textContent =
-        "Couldn't play the song. Check the MP3 filename and assets/music folder.";
+        "Music could not play. Check the MP3 file and try again.";
     }
   }
 
@@ -118,7 +128,6 @@ ment.addEventListener("DOMContentLoaded", () => {
     playTrackAt(currentTrack + 1);
   });
 
-  // Automatically play the next song and update the photo.
   audio.addEventListener("ended", () => {
     playTrackAt(currentTrack + 1);
   });
@@ -139,10 +148,10 @@ ment.addEventListener("DOMContentLoaded", () => {
 
   audio.addEventListener("error", () => {
     musicStatus.textContent =
-      "Music file not found. Check assets/music/ and the exact MP3 names.";
+      "Music file could not load. Check that 1.mp3, 2.mp3 and 3.mp3 exist in GitHub.";
   });
 
-  // Reveal the birthday message.
+  // Reveal the birthday surprise.
   surpriseButton.addEventListener("click", () => {
     surpriseMessage.hidden = false;
     surpriseButton.textContent = "Surprise Opened 💖";
@@ -154,7 +163,7 @@ ment.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Toggle the COSO Café lunch reminder.
+  // Toggle the lunch reminder.
   lunchButton.addEventListener("click", () => {
     lunchReminder.hidden = !lunchReminder.hidden;
 
@@ -163,6 +172,6 @@ ment.addEventListener("DOMContentLoaded", () => {
       : "Reminder Revealed 💗";
   });
 
-  // Load the first song and its photo without autoplay.
+  // Load the first song without autoplay.
   loadTrack(0);
 });
